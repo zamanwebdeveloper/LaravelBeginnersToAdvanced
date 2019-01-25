@@ -16,3 +16,4 @@
 // });
 
 Route::get('/', 'UserController@index');
+Route::post('/userdata', 'UserController@userdata');
