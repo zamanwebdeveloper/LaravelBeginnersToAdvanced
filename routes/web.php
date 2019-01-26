@@ -17,3 +17,8 @@
 
 Route::get('/', 'UserController@index');
 Route::post('/userdata', 'UserController@userdata');
+Route::get('/edit-users/{id}', 'UserController@edit_users');
+Route::post('/update-users', 'UserController@updateusers');
+Route::get('/delete-users/{id}', 'UserController@deleteusers');
+
+

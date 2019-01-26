@@ -25,7 +25,7 @@
 <body>
 
 <div class="container">
-  <h2 class="text-center">Users</h2>
+  <h2 class="text-center">Edit Users Form</h2>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="flash-message">
@@ -38,49 +38,25 @@
                  @endif
               @endforeach
           </div> 
-          <form action="{{url('/userdata')}}" method="POST">
+          <form action="{{url('/update-users')}}" method="POST">
             <!-- {{csrf_field()}} -->
             @csrf
             <div class="form-group">
               <label for="name">Name:</label>
-              <input type="text" class="form-control" placeholder="Enter your name" name="name">
+              <input type="text" class="form-control" value="{{$userdata['name']}}" placeholder="Enter your name" name="name">
             </div>
+            <input type="hidden" value="{{$userdata['id']}}" name="user_id">
             <div class="form-group">
               <label for="mobile">Mobile:</label>
-              <input type="number" class="form-control" placeholder="Enter Mobile Number" name="mobile" min="999999999" max="9999999999">
+              <input type="number" class="form-control" value="{{$userdata['mobile']}}" placeholder="Enter Mobile Number" name="mobile">
             </div>
             <div class="form-group">
               <label for="email">Email:</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+              <input type="email" class="form-control" value="{{$userdata['email']}}" placeholder="Enter email" name="email">
             </div>
-             <button type="submit" class="btn btn-default">Submit</button>
+             <button type="submit" class="btn btn-default">Update</button>
           </form>
         </div>
-    </div>
-    <!-- <hr> -->
-    <div class="row">
-      <div class="col-md-12">
-        <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Mobile</th>
-        <th>Email</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach($users as $user)
-      <tr>
-        <td>{{$user['name']}}</td>
-        <td>{{$user['mobile']}}</td>
-        <td>{{$user['email']}}</td>
-        <td><a href="{{url('/edit-users/'.base64_encode(convert_uuencode($user['id'])))}}"><i class="fa fa-edit"></i></a><a href="{{url('/delete-users/'.base64_encode(convert_uuencode($user['id'])))}}"><i class="fa fa-trash"></i></a></td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
-      </div>
     </div>
 </div>
 
