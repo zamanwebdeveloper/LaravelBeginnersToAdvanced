@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class UserController extends Controller
 {
@@ -22,12 +23,17 @@ class UserController extends Controller
     	// die;
     	if (!empty($data)) {
     		try{
-    		$id = \DB::table('users')->insertGetId(['name'=>$data['name'], 'mobile'=>$data['mobile'],'email'=>$data['email']]);
+                $user = new User();
+                $user->name=$data['name'];
+                $user->mobile=$data['mobile'];
+                $user->email=$data['email'];
+                $user->save();
+    		// User::create(['name'=>$data['name'], 'mobile'=>$data['mobile'],'email'=>$data['email']]);
     		}catch(\Exception $e){
-    			$request->session()->flash('alert-danger', 'Registration Failed');
+    			$request->session()->flash('alert-danger', $e->getMessage());
     			return redirect()->back();
     		}
-    		$message = $id.' '. 'User Add Successfully';
+    		$message = 'User Add Successfully';
     		$request->session()->flash('alert-success', $message);
     		return redirect()->back();
     	}else{
