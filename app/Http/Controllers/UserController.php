@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use DB;
+use File;
 
 class UserController extends Controller
 {
@@ -17,13 +18,22 @@ class UserController extends Controller
         // die;
 
         $imagename='';
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) 
+        {
             $file=$request->file('image');
             $fileName=$file->getClientOriginalName();
             $extension=$file->getClientOriginalExtension();
-            $imgname=uniqid().$fileName;
-            $destinationPath=public_path('/img/');
-            $file->move($destinationPath,$imgname);
+            if ($extension=='jpg' || $extension=='JPG' || $extension=='png' || $extension=='PNG' || $extension=='jpeg')
+            {
+                $imgname=uniqid().$fileName;
+                $destinationPath=public_path('/img/');
+                $file->move($destinationPath,$imgname);
+            }
+            else{
+                $request->session()->flash('alert-danger', 'File type not valid!');
+                return redirect()->back();
+
+            }
         }
         // else{
         //     $imagename='';
@@ -90,12 +100,41 @@ class UserController extends Controller
 
     public function updateusers(Request $request){
         $data = $request->all();
+        if ($request->hasFile('image')) {
+            $oldImage=User::where('id',$data['user_id'])->value('image');
+            $fullPath=public_path('/img/').$oldImage;
+            File::delete($fullPath);
+
+            $file=$request->file('image');
+            $fileName=$file->getClientOriginalName();
+            $extension=$file->getClientOriginalExtension();
+            $imgname=uniqid().$fileName;
+            $destinationPath=public_path('/img/');
+            $file->move($destinationPath,$imgname);
+        }else{
+            $imgname=User::where('id',$data['user_id'])->value('image');
+
+        }
+
     //     echo "<pre>";
     //     print_r($data);
     //     die;
     
         try {
-        DB::table('users')->where('id',$data['user_id'])->update(['name'=>$data['name'],'mobile'=>$data['mobile'],'email'=>$data['email']]);
+        // DB::table('users')->where('id',$data['user_id'])->update([
+        //     'name'=>$data['name'],
+        //     'mobile'=>$data['mobile'],
+        //     'email'=>$data['email']
+        // ]);
+        //Using Model
+
+        User::where('id',$data['user_id'])->update([
+                                    'name'=>$data['name'],
+                                    'mobile'=>$data['mobile'],
+                                    'email'=>$data['email'],
+                                    'image'=>$imgname
+                                    ]);
+
         $request->session()->flash('alert-success', 'User Update Successfully');
 
         } catch (\Exception $e) {

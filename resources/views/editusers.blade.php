@@ -38,7 +38,7 @@
                  @endif
               @endforeach
           </div> 
-          <form action="{{url('/update-users')}}" method="POST">
+          <form action="{{url('/update-users')}}" method="POST" enctype="multipart/form-data">
             <!-- {{csrf_field()}} -->
             @csrf
             <div class="form-group">
@@ -53,6 +53,13 @@
             <div class="form-group">
               <label for="email">Email:</label>
               <input type="email" class="form-control" value="{{$userdata['email']}}" placeholder="Enter email" name="email">
+            </div>
+            <div class="form-group">
+              <label for="image">Image:</label>
+              <input type="file" class="form-control" name="image">
+            </div>
+            <div class="form-group">
+              <img src="{{asset('public/img/'.$userdata['image'])}}" width="100px" height="100px">
             </div>
              <button type="submit" class="btn btn-default">Update</button>
           </form>
