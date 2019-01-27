@@ -28,4 +28,8 @@ class User extends Authenticatable
     //     'password', 'remember_token',
     // ];
     // public $timestamps = false;
+    public function Books()
+    {
+        return $this->hasOne('App\Book','user_id','id');
+    }
 }

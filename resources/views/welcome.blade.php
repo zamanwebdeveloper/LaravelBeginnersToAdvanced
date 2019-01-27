@@ -38,7 +38,7 @@
                  @endif
               @endforeach
           </div> 
-
+          <!-- CreateUserdata -->
           <form action="{{url('/userdata')}}" method="POST" enctype="multipart/form-data">
             <!-- {{csrf_field()}} -->
             @csrf
@@ -55,6 +55,15 @@
               <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
             </div>
             <div class="form-group">
+              <label for="book">Book:</label>
+              <select class="form-control" name="book">
+                <option value="">Select Book</option>
+                <option value="book1">Book1</option>
+                <option value="book2">Book2</option>
+                <option value="book3">Book3</option>
+              </select>
+            </div>
+            <div class="form-group">
               <label for="image">Image:</label>
               <input type="file" class="form-control" name="image">
             </div>
@@ -64,6 +73,7 @@
         </div>
     </div>
     <!-- <hr> -->
+    <!-- ReadData -->
     <div class="row">
       <div class="col-md-12">
         <table class="table table-hover">
@@ -72,6 +82,7 @@
         <th>Name</th>
         <th>Mobile</th>
         <th>Email</th>
+        <th>Book</th>
         <th>Image</th>
         <th>Action</th>
       </tr>
@@ -82,6 +93,7 @@
         <td>{{$user['name']}}</td>
         <td>{{$user['mobile']}}</td>
         <td>{{$user['email']}}</td>
+        <td>{{$user['books']['book']}}</td>
         <td>
           @if(!empty($user['image']))
           <img src="{{asset('public/img/'.$user['image'])}}" width="100px" height="100px">

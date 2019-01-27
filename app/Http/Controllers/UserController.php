@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Book;
 use DB;
 use File;
 
@@ -13,6 +14,7 @@ class UserController extends Controller
 
     public function CreateUserdata(Request $request){
     	$data = $request->all();
+
         // echo "<pre>";
         // print_r($data);
         // die;
@@ -57,6 +59,14 @@ class UserController extends Controller
                 $user->email=$data['email'];
                 $user->image=$imgname;
                 $user->save();
+
+                $book=new Book();
+                $book->book=$data['book'];
+                $book->user_id=$user->id;
+                $book->save();
+
+
+
     		// User::create(['name'=>$data['name'], 'mobile'=>$data['mobile'],'email'=>$data['email']]);
     		}catch(\Exception $e){
     			$request->session()->flash('alert-danger', 'Field Must not be empty!');
@@ -72,9 +82,10 @@ class UserController extends Controller
     }
 
     public function ReadData(){
-        $users = DB::table('users')->get();
+        $users = User::with('Books')->get()->toArray();
+        // $users = DB::table('users')->get();
         $users= json_decode(json_encode($users),true);
-        // $users = User::get()->toArray();
+        // For testing purpose
         // echo "<pre>";
         // print_r($users);
         // die;
@@ -89,13 +100,16 @@ class UserController extends Controller
     }
     public function edit_users($id){
         $id = convert_uudecode(base64_decode($id));
-        // echo $id;die();
-        $userdata = DB::table('users')->where('id', $id)->first();
+        $userdata = User::with('Books')->where('id', $id)->first()->toArray();
         $userdata= json_decode(json_encode($userdata),true);
+        return view('editusers',['userdata'=>$userdata]);
+
+
+        // echo $id;die();
+        // $userdata = DB::table('users')->where('id', $id)->first();
 
 
         // $userdata = User::where('id', $id)->first()->toArray();
-        return view('editusers',['userdata'=>$userdata]);
     }
 
     public function updateusers(Request $request){
@@ -134,6 +148,7 @@ class UserController extends Controller
                                     'email'=>$data['email'],
                                     'image'=>$imgname
                                     ]);
+        Book::where('user_id',$data['user_id'])->update(['book'=>$data['book']]);
 
         $request->session()->flash('alert-success', 'User Update Successfully');
 
