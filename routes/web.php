@@ -15,10 +15,15 @@
 //     return view('welcome');
 // });
 
-Route::get('/', 'UserController@index');
-Route::post('/userdata', 'UserController@userdata');
+Route::post('/userdata', 'UserController@CreateUserdata');
+Route::get('/', 'UserController@ReadData');
 Route::get('/edit-users/{id}', 'UserController@edit_users');
 Route::post('/update-users', 'UserController@updateusers');
 Route::get('/delete-users/{id}', 'UserController@deleteusers');
+
+//Invest
+
+Route::get('/invest', 'UserController@Invest');
+
 
 

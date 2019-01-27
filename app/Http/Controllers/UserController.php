@@ -4,40 +4,53 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use DB;
 
 class UserController extends Controller
 {
     //
-    public function index(){
-        $users = User::get()->toArray();
-        
+
+    public function CreateUserdata(Request $request){
+    	$data = $request->all();
         // echo "<pre>";
-        // print_r($users);
+        // print_r($data);
         // die;
 
-        // $name = "Welcome to my ZamanWebDeveloper Website.";
-    	// return view('welcome')->with('name', $name);
-    	// return view('welcome')->with(compact('name'));
-    	// return view('welcome', compact('name'));
+        $imagename='';
+        if ($request->hasFile('image')) {
+            $file=$request->file('image');
+            $fileName=$file->getClientOriginalName();
+            $extension=$file->getClientOriginalExtension();
+            $imgname=uniqid().$fileName;
+            $destinationPath=public_path('/img/');
+            $file->move($destinationPath,$imgname);
+        }
+        // else{
+        //     $imagename='';
+        // }
 
-    	return view('welcome', ['users'=>$users]);
-    }
-    public function userdata(Request $request){
-    	$data = $request->all();
     	// $data = $request->input();
-    	// echo "<pre>";
-    	// print_r($data);
-    	// die;
+    	
     	if (!empty($data)) {
     		try{
+                // DB::table('users')->insert([
+                //                         'name'=>$data['name'],
+                //                         'mobile'=>$data['mobile'],
+                //                         'email'=>$data['email'],
+                //                         'image'=>$imgname
+                //                     ]);
+
+                //Using Model
                 $user = new User();
                 $user->name=$data['name'];
                 $user->mobile=$data['mobile'];
                 $user->email=$data['email'];
+                $user->image=$imgname;
                 $user->save();
     		// User::create(['name'=>$data['name'], 'mobile'=>$data['mobile'],'email'=>$data['email']]);
     		}catch(\Exception $e){
-    			$request->session()->flash('alert-danger', $e->getMessage());
+    			$request->session()->flash('alert-danger', 'Field Must not be empty!');
+                // $e->getMessage()
     			return redirect()->back();
     		}
     		$message = 'User Add Successfully';
@@ -47,10 +60,31 @@ class UserController extends Controller
     		return redirect()->back();
     	}
     }
+
+    public function ReadData(){
+        $users = DB::table('users')->get();
+        $users= json_decode(json_encode($users),true);
+        // $users = User::get()->toArray();
+        // echo "<pre>";
+        // print_r($users);
+        // die;
+
+        return view('welcome', ['users'=>$users]);    
+        
+        // $name = "Welcome to my ZamanWebDeveloper Website.";
+        // return view('welcome')->with('name', $name);
+        // return view('welcome')->with(compact('name'));
+        // return view('welcome', compact('name'));
+
+    }
     public function edit_users($id){
         $id = convert_uudecode(base64_decode($id));
         // echo $id;die();
-        $userdata = User::where('id', $id)->first()->toArray();
+        $userdata = DB::table('users')->where('id', $id)->first();
+        $userdata= json_decode(json_encode($userdata),true);
+
+
+        // $userdata = User::where('id', $id)->first()->toArray();
         return view('editusers',['userdata'=>$userdata]);
     }
 
@@ -61,7 +95,7 @@ class UserController extends Controller
     //     die;
     
         try {
-        User::where('id',$data['user_id'])->update(['name'=>$data['name'],'mobile'=>$data['mobile'],'email'=>$data['email']]);
+        DB::table('users')->where('id',$data['user_id'])->update(['name'=>$data['name'],'mobile'=>$data['mobile'],'email'=>$data['email']]);
         $request->session()->flash('alert-success', 'User Update Successfully');
 
         } catch (\Exception $e) {
@@ -72,12 +106,15 @@ class UserController extends Controller
     public function deleteusers(Request $request,$id){
         $id = convert_uudecode(base64_decode($id));
         try {
-            User::where('id',$id)->delete();
+            DB::table('users')->where('id',$id)->delete();
         $request->session()->flash('alert-success', 'User Delete Successfully');
             
         } catch (\Exception $e) {
         $request->session()->flash('alert-danger', 'Failed');
         }
         return redirect()->back();
+    }
+    public function Invest(){
+        return view('invest');
     }
 }

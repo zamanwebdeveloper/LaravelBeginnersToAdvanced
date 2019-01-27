@@ -38,7 +38,8 @@
                  @endif
               @endforeach
           </div> 
-          <form action="{{url('/userdata')}}" method="POST">
+
+          <form action="{{url('/userdata')}}" method="POST" enctype="multipart/form-data">
             <!-- {{csrf_field()}} -->
             @csrf
             <div class="form-group">
@@ -53,8 +54,13 @@
               <label for="email">Email:</label>
               <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
             </div>
+            <div class="form-group">
+              <label for="image">Image:</label>
+              <input type="file" class="form-control" name="image">
+            </div>
              <button type="submit" class="btn btn-default">Submit</button>
           </form>
+
         </div>
     </div>
     <!-- <hr> -->
@@ -66,6 +72,7 @@
         <th>Name</th>
         <th>Mobile</th>
         <th>Email</th>
+        <th>Image</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -75,11 +82,22 @@
         <td>{{$user['name']}}</td>
         <td>{{$user['mobile']}}</td>
         <td>{{$user['email']}}</td>
+        <td>
+          @if(!empty($user['image']))
+          <img src="{{asset('public/img/'.$user['image'])}}" width="100px" height="100px">
+          @else
+          <img src="{{asset('public/img/dummy.jpg')}}" width="100px" height="100px">
+          @endif
+
+
+        </td>
         <td><a href="{{url('/edit-users/'.base64_encode(convert_uuencode($user['id'])))}}"><i class="fa fa-edit"></i></a><a href="{{url('/delete-users/'.base64_encode(convert_uuencode($user['id'])))}}"><i class="fa fa-trash"></i></a></td>
       </tr>
       @endforeach
     </tbody>
   </table>
+  <hr>
+  <a href="{{url('/invest')}}">Invest</a>
       </div>
     </div>
 </div>
