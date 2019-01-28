@@ -56,7 +56,7 @@
             </div>
             <div class="form-group">
               <label for="book">Book:</label>
-              <select class="form-control" name="book">
+              <select class="form-control" name="book[]" multiple="">
                 <option value="">Select Book</option>
                 <option value="book1">Book1</option>
                 <option value="book2">Book2</option>
@@ -93,7 +93,16 @@
         <td>{{$user['name']}}</td>
         <td>{{$user['mobile']}}</td>
         <td>{{$user['email']}}</td>
-        <td>{{$user['books']['book']}}</td>
+        <td>
+            <?php 
+            $names=[];
+            foreach ($user['books'] as $key => $value) {
+              $names[]=$value['book'];
+            }
+            $booknames=implode(',', $names);
+            ?>
+            {{$booknames}}
+        </td>
         <td>
           @if(!empty($user['image']))
           <img src="{{asset('public/img/'.$user['image'])}}" width="100px" height="100px">

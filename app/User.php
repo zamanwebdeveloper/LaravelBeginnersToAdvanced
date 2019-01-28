@@ -15,9 +15,10 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'mobile', 'email', 'image'
-    ];
+    protected $guarded = [];
+    // protected $fillable = [
+    //     'name', 'mobile', 'email', 'image'
+    // ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -30,6 +31,7 @@ class User extends Authenticatable
     // public $timestamps = false;
     public function Books()
     {
-        return $this->hasOne('App\Book','user_id','id');
+        return $this->hasMany('App\Book','user_id','id');
+        // return $this->hasOne('App\Book','user_id','id');
     }
 }

@@ -56,9 +56,9 @@
             </div>
             <div class="form-group">
               <label for="book">Book:</label>
-              <select class="form-control" name="book">
+              <select class="form-control" name="book[]" multiple="">
                 <option value="">Select Book</option>
-                <option value="book1"<?php if ($userdata['books']['book']=='book1') {echo "selected";}?>>Book1</option>
+                <option value="book1"<?php if ($userdata['books']['book']=='book1') {echo "selected";}?>>Book1</option>                
                 <option value="book2"<?php if ($userdata['books']['book']=='book2') {echo "selected";}?>>Book2</option>
                 <option value="book3"<?php if ($userdata['books']['book']=='book3') {echo "selected";}?>>Book3</option>
               </select>

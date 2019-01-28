@@ -59,11 +59,13 @@ class UserController extends Controller
                 $user->email=$data['email'];
                 $user->image=$imgname;
                 $user->save();
+                foreach ($data['book'] as $key => $value) {
+                    $book=new Book();
+                    $book->book=$value;
+                    $book->user_id=$user->id;
+                    $book->save();
+                }
 
-                $book=new Book();
-                $book->book=$data['book'];
-                $book->user_id=$user->id;
-                $book->save();
 
 
 
@@ -82,12 +84,14 @@ class UserController extends Controller
     }
 
     public function ReadData(){
+        $books=Book::with('user')->get()->toArray();
+
         $users = User::with('Books')->get()->toArray();
         // $users = DB::table('users')->get();
         $users= json_decode(json_encode($users),true);
         // For testing purpose
         // echo "<pre>";
-        // print_r($users);
+        // print_r($books);
         // die;
 
         return view('welcome', ['users'=>$users]);    
@@ -99,6 +103,7 @@ class UserController extends Controller
 
     }
     public function edit_users($id){
+
         $id = convert_uudecode(base64_decode($id));
         $userdata = User::with('Books')->where('id', $id)->first()->toArray();
         $userdata= json_decode(json_encode($userdata),true);
